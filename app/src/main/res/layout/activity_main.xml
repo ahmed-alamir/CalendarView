@@ -12,8 +12,10 @@
 	tools:context=".MainActivity">
 
 	<samples.aalamir.customcalendar.CalendarView
+		xmlns:calendarNS="http://schemas.android.com/apk/res/samples.aalamir.customcalendar"
 		android:id="@+id/calendar_view"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+		calendarNS:dateFormat="MMMM yyyy"/>
 
 </LinearLayout>

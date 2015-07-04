@@ -2,6 +2,7 @@ package samples.aalamir.customcalendar;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -31,6 +32,12 @@ public class CalendarView extends LinearLayout
 	// how many days to show, defaults to six weeks, 42 days
 	private static final int DAYS_COUNT = 42;
 
+	// default date format
+	private static final String DATE_FORMAT = "MMM yyyy";
+
+	// date format
+	private String dateFormat;
+
 	// current displayed month
 	private Calendar currentDate = Calendar.getInstance();
 
@@ -43,35 +50,51 @@ public class CalendarView extends LinearLayout
 	public CalendarView(Context context)
 	{
 		super(context);
-		initControl(context);
 	}
 
 	public CalendarView(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
-		initControl(context);
+		initControl(context, attrs);
 	}
 
 	public CalendarView(Context context, AttributeSet attrs, int defStyleAttr)
 	{
 		super(context, attrs, defStyleAttr);
-		initControl(context);
+		initControl(context, attrs);
 	}
 
 	/**
 	 * Load control xml layout
 	 */
-	private void initControl(Context context)
+	private void initControl(Context context, AttributeSet attrs)
 	{
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.control_calendar, this);
 
+		loadDateFormat(attrs);
 		assignUiElements();
 		assignClickHandlers();
 
 		updateCalendar();
 	}
 
+	private void loadDateFormat(AttributeSet attrs)
+	{
+		TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.CalendarView);
+
+		try
+		{
+			// try to load provided date format, and fallback to default otherwise
+			dateFormat = ta.getString(R.styleable.CalendarView_dateFormat);
+			if (dateFormat == null)
+				dateFormat = DATE_FORMAT;
+		}
+		finally
+		{
+			ta.recycle();
+		}
+	}
 	private void assignUiElements()
 	{
 		// layout is inflated, assign local variables to components
@@ -140,7 +163,7 @@ public class CalendarView extends LinearLayout
 		grid.setAdapter(new CalendarAdapter(getContext(), cells, events));
 
 		// update title
-		SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 		txtDate.setText(sdf.format(currentDate.getTime()));
 	}
 
