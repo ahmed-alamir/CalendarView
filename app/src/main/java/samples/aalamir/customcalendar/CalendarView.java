@@ -66,25 +66,44 @@ public class CalendarView extends LinearLayout
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.control_calendar, this);
 
-		// layout is inflated, assign local variables to components
-		btnPrev = (ImageView)findViewById(R.id.calendar_prev_button);
-		btnNext = (ImageView)findViewById(R.id.calendar_next_button);
-		txtDate = (TextView)findViewById(R.id.calendar_date_display);
-		grid = (GridView)findViewById(R.id.calendar_grid);
+		assignUiElements();
+		assignClickHandlers();
 
 		updateCalendar();
 	}
 
-	@Override
-	protected void onFinishInflate()
+	private void assignUiElements()
 	{
-		super.onFinishInflate();
-
 		// layout is inflated, assign local variables to components
 		btnPrev = (ImageView)findViewById(R.id.calendar_prev_button);
 		btnNext = (ImageView)findViewById(R.id.calendar_next_button);
 		txtDate = (TextView)findViewById(R.id.calendar_date_display);
 		grid = (GridView)findViewById(R.id.calendar_grid);
+	}
+
+	private void assignClickHandlers()
+	{
+		// add one month and refresh UI
+		btnNext.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				currentDate.add(Calendar.MONTH, 1);
+				updateCalendar();
+			}
+		});
+
+		// subtract one month and refresh UI
+		btnPrev.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				currentDate.add(Calendar.MONTH, -1);
+				updateCalendar();
+			}
+		});
 	}
 
 	/**
