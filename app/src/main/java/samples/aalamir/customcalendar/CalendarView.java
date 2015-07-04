@@ -59,6 +59,18 @@ public class CalendarView extends LinearLayout
 	{
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.control_calendar, this);
+
+		if (isInEditMode())
+		{
+			ArrayList<Integer> days = new ArrayList<>();
+			days.add(31);
+			for (int i = 1; i <= 30; ++i)
+				days.add(i);
+
+
+			((GridView)findViewById(R.id.calendar_grid)).setSelection(29);
+			((TextView)findViewById(R.id.calendar_date_display)).setText("JUN 2015");
+		}
 	}
 
 	@Override
@@ -71,5 +83,35 @@ public class CalendarView extends LinearLayout
 		btnNext = (ImageView)findViewById(R.id.calendar_next_button);
 		txtDate = (TextView)findViewById(R.id.calendar_date_display);
 		grid = (GridView)findViewById(R.id.calendar_grid);
+	}
+
+	/**
+	 * Display dates correctly in grid
+	 */
+	private void updateCalendar()
+	{
+		ArrayList<Date> cells = new ArrayList<>();
+		Calendar calendar = (Calendar)currentDate.clone();
+
+		// determine the cell for current month's beginning
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+		// move calendar backwards to the beginning of the week
+		calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
+
+		// fill cells
+		while (cells.size() < DAYS_COUNT)
+		{
+			cells.add(calendar.getTime());
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+
+		// update grid
+		((CalendarAdapter)grid.getAdapter()).updateData(cells);
+
+		// update title
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
+		txtDate.setText(sdf.format(currentDate.getTime()));
 	}
 }
