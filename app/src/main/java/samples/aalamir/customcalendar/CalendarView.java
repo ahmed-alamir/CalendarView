@@ -111,6 +111,14 @@ public class CalendarView extends LinearLayout
 	 */
 	public void updateCalendar()
 	{
+		updateCalendar(null);
+	}
+
+	/**
+	 * Display dates correctly in grid
+	 */
+	public void updateCalendar(HashSet<Date> events)
+	{
 		ArrayList<Date> cells = new ArrayList<>();
 		Calendar calendar = (Calendar)currentDate.clone();
 
@@ -129,12 +137,13 @@ public class CalendarView extends LinearLayout
 		}
 
 		// update grid
-		grid.setAdapter(new CalendarAdapter(getContext(), cells, null));
+		grid.setAdapter(new CalendarAdapter(getContext(), cells, events));
 
 		// update title
 		SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
 		txtDate.setText(sdf.format(currentDate.getTime()));
 	}
+
 
 	private class CalendarAdapter extends ArrayAdapter<Date>
 	{

@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Date;
+import java.util.HashSet;
+
 
 public class MainActivity extends ActionBarActivity
 {
@@ -14,6 +17,12 @@ public class MainActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		HashSet<Date> events = new HashSet<>();
+		events.add(new Date());
+
+		CalendarView cv = ((CalendarView)findViewById(R.id.calendar_view));
+		cv.updateCalendar(events);
 	}
 
 	@Override
