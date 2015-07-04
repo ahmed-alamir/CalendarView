@@ -1,8 +1,13 @@
 package samples.aalamir.customcalendar;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -13,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 
 /**
  * Created by a7med on 28/06/2015.
@@ -113,5 +119,69 @@ public class CalendarView extends LinearLayout
 		// update title
 		SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
 		txtDate.setText(sdf.format(currentDate.getTime()));
+	}
+
+	private class CalendarAdapter extends ArrayAdapter<Date>
+	{
+		// days with events
+		private HashSet<Date> eventDays;
+
+		// for view inflation
+		private LayoutInflater inflater;
+
+		public CalendarAdapter(Activity activity, ArrayList<Date> days, HashSet<Date> eventDays)
+		{
+			super(activity, R.layout.control_calendar_day, days);
+			this.eventDays = eventDays;
+			inflater = activity.getLayoutInflater();
+		}
+
+		public void updateData(ArrayList<Date> days)
+		{
+			// update data
+			clear();
+			addAll(days);
+
+			// refresh UI
+			notifyDataSetChanged();
+		}
+
+		@Override
+		public View getView(int position, View view, ViewGroup parent)
+		{
+			// day in question
+			Date date = getItem(position);
+
+			// today
+			Date today = new Date();
+
+			// inflate item if it does not exist yet
+			if (view == null)
+				view = inflater.inflate(R.layout.control_calendar_day, parent, false);
+
+			// if this day has an event, specify event image
+			view.setBackgroundResource(eventDays.contains(date) ? R.drawable.reminder : 0);
+
+			// clear styling
+			((TextView)view).setTypeface(null, Typeface.NORMAL);
+			((TextView)view).setTextColor(Color.BLACK);
+
+			if (date.getMonth() != today.getMonth())
+			{
+				// if this day is outside current month, grey it out
+				((TextView)view).setTextColor(getResources().getColor(R.color.greyed_out));
+			}
+			else if (today.getDate() == today.getDate())
+			{
+				// if it is today, set it to blue/bold
+				((TextView)view).setTypeface(null, Typeface.BOLD);
+				((TextView)view).setTextColor(getResources().getColor(R.color.today));
+			}
+
+			// set text
+			((TextView)view).setText(String.valueOf(date.getDate()));
+
+			return view;
+		}
 	}
 }
