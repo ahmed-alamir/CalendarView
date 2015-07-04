@@ -94,7 +94,7 @@ public class CalendarView extends LinearLayout
 	/**
 	 * Display dates correctly in grid
 	 */
-	private void updateCalendar()
+	public void updateCalendar()
 	{
 		ArrayList<Date> cells = new ArrayList<>();
 		Calendar calendar = (Calendar)currentDate.clone();
@@ -114,7 +114,7 @@ public class CalendarView extends LinearLayout
 		}
 
 		// update grid
-		((CalendarAdapter)grid.getAdapter()).updateData(cells);
+		grid.setAdapter(new CalendarAdapter(getContext(), cells, null));
 
 		// update title
 		SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
@@ -129,21 +129,11 @@ public class CalendarView extends LinearLayout
 		// for view inflation
 		private LayoutInflater inflater;
 
-		public CalendarAdapter(Activity activity, ArrayList<Date> days, HashSet<Date> eventDays)
+		public CalendarAdapter(Context context, ArrayList<Date> days, HashSet<Date> eventDays)
 		{
-			super(activity, R.layout.control_calendar_day, days);
+			super(context, R.layout.control_calendar_day, days);
 			this.eventDays = eventDays;
-			inflater = activity.getLayoutInflater();
-		}
-
-		public void updateData(ArrayList<Date> days)
-		{
-			// update data
-			clear();
-			addAll(days);
-
-			// refresh UI
-			notifyDataSetChanged();
+			inflater = LayoutInflater.from(context);
 		}
 
 		@Override
@@ -151,6 +141,9 @@ public class CalendarView extends LinearLayout
 		{
 			// day in question
 			Date date = getItem(position);
+			int day = date.getDate();
+			int month = date.getMonth();
+			int year = date.getYear();
 
 			// today
 			Date today = new Date();
@@ -166,12 +159,12 @@ public class CalendarView extends LinearLayout
 			((TextView)view).setTypeface(null, Typeface.NORMAL);
 			((TextView)view).setTextColor(Color.BLACK);
 
-			if (date.getMonth() != today.getMonth())
+			if (month != today.getMonth() || year != today.getYear())
 			{
 				// if this day is outside current month, grey it out
 				((TextView)view).setTextColor(getResources().getColor(R.color.greyed_out));
 			}
-			else if (today.getDate() == today.getDate())
+			else if (day == today.getDate())
 			{
 				// if it is today, set it to blue/bold
 				((TextView)view).setTypeface(null, Typeface.BOLD);
