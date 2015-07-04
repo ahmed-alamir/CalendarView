@@ -149,7 +149,21 @@ public class CalendarView extends LinearLayout
 				view = inflater.inflate(R.layout.control_calendar_day, parent, false);
 
 			// if this day has an event, specify event image
-			view.setBackgroundResource((eventDays != null && eventDays.contains(date)) ? R.drawable.reminder : 0);
+			view.setBackgroundResource(0);
+			if (eventDays != null)
+			{
+				for (Date eventDate : eventDays)
+				{
+					if (eventDate.getDate() == day &&
+							eventDate.getMonth() == month &&
+							eventDate.getYear() == year)
+					{
+						// mark this day for event
+						view.setBackgroundResource(R.drawable.reminder);
+						break;
+					}
+				}
+			}
 
 			// clear styling
 			((TextView)view).setTypeface(null, Typeface.NORMAL);
