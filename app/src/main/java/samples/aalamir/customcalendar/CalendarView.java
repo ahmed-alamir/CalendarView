@@ -73,7 +73,7 @@ public class CalendarView extends LinearLayout
 			for (int i = 1; i <= 30; ++i)
 				days.add(i);
 
-
+			((GridView)findViewById(R.id.calendar_grid)).setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, days));
 			((GridView)findViewById(R.id.calendar_grid)).setSelection(29);
 			((TextView)findViewById(R.id.calendar_date_display)).setText("JUN 2015");
 		}
@@ -160,7 +160,7 @@ public class CalendarView extends LinearLayout
 				view = inflater.inflate(R.layout.control_calendar_day, parent, false);
 
 			// if this day has an event, specify event image
-			view.setBackgroundResource(eventDays.contains(date) ? R.drawable.reminder : 0);
+			view.setBackgroundResource((eventDays != null && eventDays.contains(date)) ? R.drawable.reminder : 0);
 
 			// clear styling
 			((TextView)view).setTypeface(null, Typeface.NORMAL);
