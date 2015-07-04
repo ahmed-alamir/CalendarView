@@ -66,17 +66,13 @@ public class CalendarView extends LinearLayout
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.control_calendar, this);
 
-		if (isInEditMode())
-		{
-			ArrayList<Integer> days = new ArrayList<>();
-			days.add(31);
-			for (int i = 1; i <= 30; ++i)
-				days.add(i);
+		// layout is inflated, assign local variables to components
+		btnPrev = (ImageView)findViewById(R.id.calendar_prev_button);
+		btnNext = (ImageView)findViewById(R.id.calendar_next_button);
+		txtDate = (TextView)findViewById(R.id.calendar_date_display);
+		grid = (GridView)findViewById(R.id.calendar_grid);
 
-			((GridView)findViewById(R.id.calendar_grid)).setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, days));
-			((GridView)findViewById(R.id.calendar_grid)).setSelection(29);
-			((TextView)findViewById(R.id.calendar_date_display)).setText("JUN 2015");
-		}
+		updateCalendar();
 	}
 
 	@Override
