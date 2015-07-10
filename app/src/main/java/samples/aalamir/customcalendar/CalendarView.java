@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -40,6 +41,9 @@ public class CalendarView extends LinearLayout
 
 	// current displayed month
 	private Calendar currentDate = Calendar.getInstance();
+
+	//event handling
+	private EventHandler eventHandler = null;
 
 	// internal components
 	private ImageView btnPrev;
@@ -125,6 +129,22 @@ public class CalendarView extends LinearLayout
 			{
 				currentDate.add(Calendar.MONTH, -1);
 				updateCalendar();
+			}
+		});
+
+		// long-pressing a day
+		grid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+		{
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> view, View cell, int position, long id)
+			{
+				// handle long-press
+				if (eventHandler == null)
+					return false;
+
+				eventHandler.onDayLongPress((Date)view.getItemAtPosition(position));
+				return true;
 			}
 		});
 	}
@@ -237,5 +257,22 @@ public class CalendarView extends LinearLayout
 
 			return view;
 		}
+	}
+
+	/**
+	 * Assign event handler to be passed needed events
+	 */
+	public void setEventHandler(EventHandler eventHandler)
+	{
+		this.eventHandler = eventHandler;
+	}
+
+	/**
+	 * This interface defines what events to be reported to
+	 * the outside world
+	 */
+	public interface EventHandler
+	{
+		void onDayLongPress(Date date);
 	}
 }
