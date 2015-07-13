@@ -2,4 +2,9 @@
 <resources>
 	<color name="today">#4b82ff</color>
 	<color name="greyed_out">#c7c7c7</color>
+
+	<color name="summer">#44eebd82</color>
+	<color name="fall">#44d8d27e</color>
+	<color name="winter">#44a1c1da</color>
+	<color name="spring">#448da64b</color>
 </resources>

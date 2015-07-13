@@ -46,10 +46,22 @@ public class CalendarView extends LinearLayout
 	private EventHandler eventHandler = null;
 
 	// internal components
+	private LinearLayout header;
 	private ImageView btnPrev;
 	private ImageView btnNext;
 	private TextView txtDate;
 	private GridView grid;
+
+	// seasons' rainbow
+	int[] rainbow = new int[] {
+			R.color.summer,
+			R.color.fall,
+			R.color.winter,
+			R.color.spring
+	};
+
+	// month-season association (northern hemisphere, sorry australia :)
+	int[] monthSeason = new int[] {2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
 
 	public CalendarView(Context context)
 	{
@@ -102,6 +114,7 @@ public class CalendarView extends LinearLayout
 	private void assignUiElements()
 	{
 		// layout is inflated, assign local variables to components
+		header = (LinearLayout)findViewById(R.id.calendar_header);
 		btnPrev = (ImageView)findViewById(R.id.calendar_prev_button);
 		btnNext = (ImageView)findViewById(R.id.calendar_next_button);
 		txtDate = (TextView)findViewById(R.id.calendar_date_display);
@@ -185,6 +198,13 @@ public class CalendarView extends LinearLayout
 		// update title
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 		txtDate.setText(sdf.format(currentDate.getTime()));
+
+		// set header color according to current season
+		int month = currentDate.get(Calendar.MONTH);
+		int season = monthSeason[month];
+		int color = rainbow[season];
+
+		header.setBackgroundColor(getResources().getColor(color));
 	}
 
 
